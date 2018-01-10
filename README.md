@@ -1,7 +1,14 @@
 # tikv-shell
 A command-line shell interface for tikv
 
+
 ```
+install:
+
+go get github.com/pingcap/tidb
+cd $GOPATH/src/github.com/pingcap/tidb; make parser; cd -
+go install github.com/c4pt0r/tikv-shell
+
 usage:
 
 ./tikv-shell -pd [pd address of tikv cluster, default: localhost:2379]
