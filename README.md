@@ -5,7 +5,7 @@ A command-line shell interface for tikv
 ```
 install:
 
-go get github.com/pingcap/tidb
+go get -u github.com/pingcap/tidb
 cd $GOPATH/src/github.com/pingcap/tidb; make parser; cd -
 go install github.com/c4pt0r/tikv-shell
 
