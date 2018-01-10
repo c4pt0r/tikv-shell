@@ -112,7 +112,6 @@ func doSeek(args [][]byte) ([]KV, error) {
 	if err != nil {
 		return nil, errors.Trace(err)
 	}
-	// iterate keys and then delete them
 	var ret []KV
 	for it.Valid() && cnt > 0 {
 		ret = append(ret, KV{K: it.Key()[:], V: it.Value()[:]})
@@ -128,25 +127,17 @@ func do(cmd string, param [][]byte) (interface{}, error) {
 	var err error
 	switch cmd {
 	case "put":
-		if err = doPut(param); err != nil {
-			return nil, err
-		}
+		err = doPut(param)
 	case "puts":
-		if err = doPuts(param); err != nil {
-			return nil, err
-		}
+		err = doPuts(param)
 	case "get":
-		if ret, err = doGet(param); err != nil {
-			return nil, err
-		}
+		ret, err = doGet(param)
 	case "seek":
-		if ret, err = doSeek(param); err != nil {
-			return nil, err
-		}
+		ret, err = doSeek(param)
 	default:
 		return nil, errors.New("usage: put | puts | get | seek")
 	}
-	return ret, nil
+	return ret, err
 }
 
 func loop() {
