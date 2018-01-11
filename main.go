@@ -92,6 +92,30 @@ func doGet(args [][]byte) (KV, error) {
 	return KV{K: args[0], V: v}, nil
 }
 
+func doDel(args [][]byte) error {
+	if len(args) == 0 {
+		return errors.New("del [key 1] ... [key N]")
+	}
+
+	tx, err := store.Begin()
+	if err != nil {
+		return errors.Trace(err)
+	}
+
+	for i := 0; i < len(args); i++ {
+		key := args[i]
+		err := tx.Delete(key)
+		if err != nil {
+			return errors.Trace(err)
+		}
+	}
+	err = tx.Commit(goctx.Background())
+	if err != nil {
+		return errors.Trace(err)
+	}
+	return nil
+}
+
 func doSeek(args [][]byte) ([]KV, error) {
 	if len(args) != 2 {
 		return nil, errors.New("seek [start key] [limit]")
@@ -130,12 +154,14 @@ func do(cmd string, param [][]byte) (interface{}, error) {
 		err = doPut(param)
 	case "puts":
 		err = doPuts(param)
+	case "del":
+		err = doDel(param)
 	case "get":
 		ret, err = doGet(param)
 	case "seek":
 		ret, err = doSeek(param)
 	default:
-		return nil, errors.New("usage: put | puts | get | seek")
+		return nil, errors.New("usage: put | puts | get | seek | del")
 	}
 	return ret, err
 }
@@ -185,6 +211,8 @@ func loop() {
 				for _, kv := range ret.([]KV) {
 					fmt.Println(kv)
 				}
+			case nil:
+				fmt.Println("OK")
 			}
 		}
 	}
