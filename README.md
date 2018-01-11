@@ -19,4 +19,5 @@ put [key] [val]
 puts [key1] [value1] [key2] [value2] ... [key N] [value N]
 get [key]
 seek [begin key(of key prefix)] [limit]
+del [key1] [key2] ... [key N]
 ```
